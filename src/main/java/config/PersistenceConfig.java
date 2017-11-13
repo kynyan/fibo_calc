@@ -2,15 +2,17 @@ package config;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import lombok.RequiredArgsConstructor;
+import org.flywaydb.core.Flyway;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -20,7 +22,8 @@ import java.util.Map;
 
 @Configuration
 @PropertySource("classpath:application.properties")
-//@RequiredArgsConstructor
+@EnableTransactionManagement
+@EnableJpaRepositories(basePackages = "dao")
 public class PersistenceConfig {
     private final Environment env;
     private final ApplicationContext appContext;
@@ -30,19 +33,21 @@ public class PersistenceConfig {
         this.appContext = appContext;
     }
 
-    @Bean
+    @Bean @DependsOn("flyway")
     LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(false);
+        vendorAdapter.setDatabase(Database.H2);
         vendorAdapter.setShowSql(false);
 
         Map<String, Object> props = new HashMap<>();
-        props.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+        props.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
         props.put("hibernate.hbm2ddl.auto", "create-drop");
 
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
-        factory.setPackagesToScan("dao");
+//        factory.setPersistenceUnitName("h2");
+        factory.setPackagesToScan("model");
         factory.setDataSource(dataSource());
         factory.setJpaPropertyMap(props);
         return factory;
@@ -70,4 +75,15 @@ public class PersistenceConfig {
         actualDataSource.setTestConnectionOnCheckin(true);
         return actualDataSource;
     }
+
+    @Bean(initMethod = "migrate")
+    Flyway flyway() {
+        Flyway flyway = new Flyway();
+        flyway.setDataSource(dataSource());
+        flyway.setLocations("classpath:/migration");
+        flyway.setBaselineOnMigrate(true);
+        flyway.migrate();
+        return flyway;
+    }
+
 }
