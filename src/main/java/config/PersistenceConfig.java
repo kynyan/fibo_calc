@@ -2,7 +2,6 @@ package config;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import lombok.RequiredArgsConstructor;
-import org.flywaydb.core.Flyway;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
@@ -24,16 +23,12 @@ import java.util.Map;
 @PropertySource("classpath:application.properties")
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "dao")
+@RequiredArgsConstructor
 public class PersistenceConfig {
     private final Environment env;
     private final ApplicationContext appContext;
 
-    public PersistenceConfig(Environment env, ApplicationContext appContext) {
-        this.env = env;
-        this.appContext = appContext;
-    }
-
-    @Bean @DependsOn("flyway")
+    @Bean
     LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(false);
@@ -46,7 +41,6 @@ public class PersistenceConfig {
 
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
-//        factory.setPersistenceUnitName("h2");
         factory.setPackagesToScan("model");
         factory.setDataSource(dataSource());
         factory.setJpaPropertyMap(props);
@@ -74,16 +68,6 @@ public class PersistenceConfig {
         actualDataSource.setAcquireRetryAttempts(env.getProperty("db.pool.acquire_attempts", int.class));
         actualDataSource.setTestConnectionOnCheckin(true);
         return actualDataSource;
-    }
-
-    @Bean(initMethod = "migrate")
-    Flyway flyway() {
-        Flyway flyway = new Flyway();
-        flyway.setDataSource(dataSource());
-        flyway.setLocations("classpath:/migration");
-        flyway.setBaselineOnMigrate(true);
-        flyway.migrate();
-        return flyway;
     }
 
 }
