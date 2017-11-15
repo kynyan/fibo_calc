@@ -4,6 +4,7 @@ import config.DispatcherConfig;
 import config.PersistenceConfig;
 import dao.UserRepository;
 
+import model.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,8 @@ public class UserITest {
 
     @Test @Transactional
     public void returnsAllUsers() {
-         String response = when().get("/users")
+        userRepository.save(new User().setUsername("kozhukho").setPassword("password"));
+        String response = when().get("/users")
                 .then().statusCode(HttpStatus.OK.value())
                 .extract().response().asString();
         assertEquals("ok", "ok");
