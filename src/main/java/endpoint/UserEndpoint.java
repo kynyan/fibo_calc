@@ -1,7 +1,6 @@
 package endpoint;
 
 import dao.UserRepository;
-import lombok.RequiredArgsConstructor;
 import model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -9,11 +8,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-@RestController
-@RequiredArgsConstructor
-public class UserEndpoint {
+import javax.validation.Valid;
 
+@RestController
+public class UserEndpoint {
     private UserRepository userRepository;
+
+    public UserEndpoint(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @RequestMapping(method = RequestMethod.GET, path = "/users")
     public ResponseEntity getAllUsers() {
@@ -36,22 +39,20 @@ public class UserEndpoint {
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ModelAndView createNewUser(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
+    public ModelAndView createNewUser(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult, Model model) {
         ModelAndView modelAndView = new ModelAndView();
-        User userExists = userRepository.findByUsername(userForm.getUsername());
-        if (userExists != null) {
-            bindingResult
-                    .rejectValue("email", "error.user",
-                            "There is already a user registered with the email provided");
+        User user = userRepository.findByUsername(userForm.getUsername());
+        if (user != null) {
+            String errorMsg = String.format("User with username [%s] has already been registered", userForm.getUsername());
+            bindingResult.rejectValue("username", "error.user", errorMsg);
         }
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("registration");
         } else {
             userRepository.save(userForm);
-            modelAndView.addObject("successMessage", "User has been registered successfully");
-            modelAndView.addObject("user", new User());
-            modelAndView.setViewName("registration");
-
+//            modelAndView.addObject("successMessage", "User has been registered successfully");
+//            modelAndView.addObject("userForm", new User());
+            modelAndView.setViewName("calculator");
         }
         return modelAndView;
     }
