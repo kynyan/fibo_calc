@@ -5,9 +5,9 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+//import javax.validation.constraints.NotNull;
+//import javax.validation.constraints.Pattern;
+//import javax.validation.constraints.Size;
 
 import static io.qala.datagen.RandomShortApi.alphanumeric;
 
@@ -31,15 +31,15 @@ public class User {
     private Long id;
 
     @Column(name = "username")
-    @NotNull(message = USERNAME_NOTE)
-    @Size(min = USERNAME_LOWER_BOUNDARY, max = USERNAME_UPPER_BOUNDARY, message = USERNAME_NOTE)
-    @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = ALLOWED_SYMBOLS_NOTE)
+//    @NotNull(message = USERNAME_NOTE)
+//    @Size(min = USERNAME_LOWER_BOUNDARY, max = USERNAME_UPPER_BOUNDARY, message = USERNAME_NOTE)
+//    @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = ALLOWED_SYMBOLS_NOTE)
     private String username;
 
     @Column(name = "password")
-    @NotNull(message = PASSWORD_NOTE)
-    @Size(min = PASSWORD_LOWER_BOUNDARY, max = PASSWORD_UPPER_BOUNDARY, message = PASSWORD_NOTE)
-    @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = ALLOWED_SYMBOLS_NOTE)
+//    @NotNull(message = PASSWORD_NOTE)
+//    @Size(min = PASSWORD_LOWER_BOUNDARY, max = PASSWORD_UPPER_BOUNDARY, message = PASSWORD_NOTE)
+//    @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = ALLOWED_SYMBOLS_NOTE)
     private String password;
 
     public static User random() {

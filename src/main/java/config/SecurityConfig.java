@@ -3,6 +3,7 @@ package config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,10 +19,12 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+@ComponentScan(basePackages = "service")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private DataSource dataSource;
+//    @Autowired
+//    private DataSource dataSource;
+    @Autowired
     private UserService userService;
 
 //    @Autowired
@@ -53,33 +56,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder(4);
     }
 
+//    @Override
+//    protected void configure(final HttpSecurity http) throws Exception {
+//        http.authorizeRequests()
+//                .antMatchers("/login").permitAll()
+//                .anyRequest().authenticated()
+//                .and().formLogin().permitAll()
+//                .and().csrf().disable();
+//    }
+
     @Override
-    protected void configure(final HttpSecurity http) throws Exception {
-        // @formatter:off
-        http.authorizeRequests()
-                .antMatchers("/login").permitAll()
-//                .antMatchers("/admin").hasRole("ADMIN")
+    protected void configure(HttpSecurity http) throws Exception {
+
+        http
+                .authorizeRequests()
+                .antMatchers("/resources/**", "/registration").permitAll()
                 .anyRequest().authenticated()
-                .and().formLogin().permitAll()
-                .and().csrf().disable();
-        ;
-        // @formatter:on
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .permitAll()
+                .and()
+                .logout()
+                .permitAll();
     }
 
-
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests()
-//                .antMatchers("/hello").access("hasRole('ROLE_ADMIN')")
-//                .anyRequest().permitAll()
-//                .and()
-//                .formLogin().loginPage("/login")
-//                .usernameParameter("username").passwordParameter("password")
-//                .and()
-//                .logout().logoutSuccessUrl("/login?logout")
-//                .and()
-//                .exceptionHandling().accessDeniedPage("/403")
-//                .and()
-//                .csrf();
-//    }
 }
