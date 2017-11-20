@@ -47,13 +47,13 @@
             </div>
         </spring:bind>
 
-        <spring:bind path="passwordConfirm">
-            <div class="form-group ${status.error ? 'has-error' : ''}">
-                <form:input type="password" path="passwordConfirm" class="form-control"
-                            placeholder="Confirm your password"></form:input>
-                <form:errors path="passwordConfirm"></form:errors>
-            </div>
-        </spring:bind>
+        <%--<spring:bind path="passwordConfirm">--%>
+            <%--<div class="form-group ${status.error ? 'has-error' : ''}">--%>
+                <%--<form:input type="password" path="passwordConfirm" class="form-control"--%>
+                            <%--placeholder="Confirm your password"></form:input>--%>
+                <%--<form:errors path="passwordConfirm"></form:errors>--%>
+            <%--</div>--%>
+        <%--</spring:bind>--%>
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
     </form:form>

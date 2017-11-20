@@ -25,42 +25,20 @@ public class UserEndpoint {
         return ResponseEntity.ok(userRepository.findById(id));
     }
 
-    @RequestMapping(value = "/registration", method = RequestMethod.GET)
-    public String registration(Model model) {
-        model.addAttribute("userForm", new User());
-
-        return "registration";
-    }
-
-//    @RequestMapping(value = "/registration", method = RequestMethod.POST)
-//    public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
-////        userValidator.validate(userForm, bindingResult);
-//
-//        if (bindingResult.hasErrors()) {
-//            return "registration";
-//        }
-//
-//        userRepository.save(userForm);
-//
-////        securityService.autologin(userForm.getUsername(), userForm.getPasswordConfirm());
-//
-//        return "redirect:/welcome";
-//    }
-
 
     @RequestMapping(value="/registration", method = RequestMethod.GET)
     public ModelAndView registration(){
         ModelAndView modelAndView = new ModelAndView();
         User user = new User();
-        modelAndView.addObject("user", user);
+        modelAndView.addObject("userForm", user);
         modelAndView.setViewName("registration");
         return modelAndView;
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ModelAndView createNewUser(User user, BindingResult bindingResult) {
+    public ModelAndView createNewUser(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
         ModelAndView modelAndView = new ModelAndView();
-        User userExists = userRepository.findUserByUsername(user.getUsername());
+        User userExists = userRepository.findByUsername(userForm.getUsername());
         if (userExists != null) {
             bindingResult
                     .rejectValue("email", "error.user",
@@ -69,7 +47,7 @@ public class UserEndpoint {
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("registration");
         } else {
-            userService.saveUser(user);
+            userRepository.save(userForm);
             modelAndView.addObject("successMessage", "User has been registered successfully");
             modelAndView.addObject("user", new User());
             modelAndView.setViewName("registration");
