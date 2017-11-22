@@ -29,6 +29,23 @@ body {
     font-size: 16px;
 }
 
+.form-signin .form-calculator {
+    max-width: 100px;
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .form-signin .form-control:focus {
     z-index: 2;
 }

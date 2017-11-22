@@ -33,12 +33,12 @@
 
         <div class="form-group ${error != null ? 'has-error' : ''}">
             <span>${message}</span>
-            <input name="index" type="number" class="form-control" placeholder="Index"
+            <input name="index" type="number" min="0" class="form-calculator" placeholder="Index"
                    autofocus="true"/>
             <span>${error}</span>
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Calculate</button>
         </div>
 
     </form>
