@@ -22,42 +22,40 @@ import javax.sql.DataSource;
 @ComponentScan(basePackages = "service")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-//    @Autowired
-//    private UserService userService;
-
     @Autowired
-    private DataSource dataSource;
+    private UserService userService;
 
 //    @Autowired
-//    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Value("${spring.queries.users-query}")
-    private String usersQuery;
-
-    @Value("${spring.queries.roles-query}")
-    private String rolesQuery;
-
-//    @Override
-//    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-//        auth.authenticationProvider(authenticationProvider());
-//    }
-
-//    @Bean
-//    public DaoAuthenticationProvider authenticationProvider() {
-//        final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-//        authProvider.setUserDetailsService(userService);
-//        authProvider.setPasswordEncoder(encoder());
-//        return authProvider;
-//    }
+//    private DataSource dataSource;
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth)
-            throws Exception {
-        auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .usersByUsernameQuery(usersQuery)
-                .passwordEncoder(encoder());
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
     }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userService);
+        authProvider.setPasswordEncoder(encoder());
+        return authProvider;
+    }
+
+//    @Autowired
+//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(userService).passwordEncoder(encoder());
+//    }
+
+
+//    @Autowired
+//    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.jdbcAuthentication()
+//                .dataSource(dataSource)
+////                .withDefaultSchema()
+////                .withUser("admin").password("admin").roles("ADMIN");
+//                .usersByUsernameQuery("select username, password from user where username=?")
+//                .passwordEncoder(encoder());
+//    }
 
     @Bean
     public PasswordEncoder encoder() {
@@ -69,12 +67,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                .antMatchers("/resources/**", "/registration").permitAll()
+                .antMatchers("/resources/**", "/registration", "/fibonacci-number").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/fibonacci-number", false)
+                .defaultSuccessUrl("/fibonacci-number", true)
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .permitAll()

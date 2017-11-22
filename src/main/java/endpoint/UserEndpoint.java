@@ -64,7 +64,9 @@ public class UserEndpoint {
             @RequestParam(value = "logout", required = false) String logout) {
 
         ModelAndView model = new ModelAndView();
+        System.out.println("user in DB: " + userRepository.findByUsername("admin").getUsername());
         if (error != null) {
+            System.out.println("Error: "+ error);
             model.addObject("error", "Invalid username and password!");
         }
 
@@ -75,10 +77,5 @@ public class UserEndpoint {
 
         return model;
 
-    }
-
-    @RequestMapping(value = {"/", "/welcome"}, method = RequestMethod.GET)
-    public String welcome(Model model) {
-        return "welcome";
     }
 }
