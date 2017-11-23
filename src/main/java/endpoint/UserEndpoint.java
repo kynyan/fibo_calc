@@ -3,7 +3,6 @@ package endpoint;
 import dao.UserRepository;
 import model.User;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -39,7 +38,7 @@ public class UserEndpoint {
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ModelAndView createNewUser(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult, Model model) {
+    public ModelAndView createNewUser(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
         User user = userRepository.findByUsername(userForm.getUsername());
         if (user != null) {
@@ -50,8 +49,6 @@ public class UserEndpoint {
             modelAndView.setViewName("registration");
         } else {
             userRepository.save(userForm);
-//            modelAndView.addObject("successMessage", "User has been registered successfully");
-//            modelAndView.addObject("userForm", new User());
             modelAndView.setViewName("calculator");
         }
         return modelAndView;
@@ -64,7 +61,6 @@ public class UserEndpoint {
             @RequestParam(value = "logout", required = false) String logout) {
 
         ModelAndView model = new ModelAndView();
-        System.out.println("user in DB: " + userRepository.findByUsername("admin").getUsername());
         if (error != null) {
             System.out.println("Error: "+ error);
             model.addObject("error", "Invalid username and password!");
@@ -74,8 +70,6 @@ public class UserEndpoint {
             model.addObject("msg", "You've been logged out successfully.");
         }
         model.setViewName("login");
-
         return model;
-
     }
 }

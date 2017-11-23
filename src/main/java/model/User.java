@@ -47,4 +47,9 @@ public class User {
                 .setUsername(alphanumeric(USERNAME_LOWER_BOUNDARY, USERNAME_UPPER_BOUNDARY))
                 .setPassword(alphanumeric(PASSWORD_LOWER_BOUNDARY, PASSWORD_UPPER_BOUNDARY));
     }
+
+    @Override
+    public String toString() {
+        return "username: " + this.username + " password: " + this.password;
+    }
 }

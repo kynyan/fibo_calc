@@ -13,6 +13,13 @@ import org.springframework.web.servlet.view.JstlView;
 public class DispatcherConfig implements WebMvcConfigurer {
 
     @Override
+    public void addViewControllers(ViewControllerRegistry viewControllerRegistry) {
+        viewControllerRegistry.addViewController("/login").setViewName("login");
+        viewControllerRegistry.addViewController("/calculator").setViewName("calculator");
+        viewControllerRegistry.addViewController("/registration").setViewName("registration");
+    }
+
+    @Override
     public void addResourceHandlers(final ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
     }
