@@ -49,6 +49,7 @@ public class UserEndpoint {
             modelAndView.setViewName("registration");
         } else {
             userRepository.save(userForm);
+            modelAndView.addObject("index",0);
             modelAndView.setViewName("calculator");
         }
         return modelAndView;

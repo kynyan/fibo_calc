@@ -28,18 +28,28 @@
 <body>
 <div class="container">
 
-    <form method="POST" action="${contextPath}/fibonacci-number" class="form-signin">
+    <form method="POST" modelAttribute="index" class="form-signin">
         <h2 class="form-heading">Fibonacci calculator</h2>
 
-        <div class="form-group ${error != null ? 'has-error' : ''}">
-            <span>${message}</span>
-            <input name="index" type="number" min="0" class="form-calculator" placeholder="Index"
-                   autofocus="true"/>
-            <span>${error}</span>
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <%--<div class="form-group ${error != null ? 'has-error' : ''}">--%>
+            <%--<span>${message}</span>--%>
+            <%--<input name="index" type="number" min="0" class="form-calculator" placeholder="Index"--%>
+            <%--       autofocus="true"/>--%>
+            <%--<span>${error}</span>--%>
 
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Calculate</button>
-        </div>
+            <%--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>--%>
+
+            <%--<button class="btn btn-lg btn-primary btn-block" type="submit">Calculate</button>--%>
+        <%--</div>--%>
+
+        <spring:bind path="index">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:input name = "index" type="number" path="index" class="form-calculator" placeholder="Index"
+                    autofocus="true"></form:input>
+                <form:errors path="index"></form:errors>
+            </div>
+        </spring:bind>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Calculate</button>
 
     </form>
 
