@@ -1,7 +1,7 @@
 package endpoint;
 
 import model.Calculator;
-import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,10 +18,15 @@ public class CalculatorEndpoint {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity calculateFiboNumber(@RequestParam("index") int index) {
-        System.out.println("inside calculateFiboNumber() method with index = " + index);
-        Calculator calculator = new Calculator(index);
-        System.out.println("Fibonacci number is: " + calculator.getFiboNumber());
-        return ResponseEntity.ok(calculator.getFiboNumber());
+    public ModelAndView calculateFiboNumber(@ModelAttribute("index") int index, BindingResult bindingResult) {
+        ModelAndView modelAndView = new ModelAndView();
+        try {
+            Calculator calculator = new Calculator(index);
+            modelAndView.addObject("result", calculator.getFiboNumber());
+        } catch (IllegalArgumentException e) {
+            bindingResult.reject( "error.index", e.getMessage());
+        }
+        modelAndView.setViewName("calculator");
+        return modelAndView;
     }
 }

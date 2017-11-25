@@ -50,7 +50,7 @@ public class UserEndpoint {
         } else {
             userRepository.save(userForm);
             modelAndView.addObject("index",0);
-            modelAndView.setViewName("calculator");
+            modelAndView.setViewName("login");
         }
         return modelAndView;
     }

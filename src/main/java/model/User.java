@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 import static io.qala.datagen.RandomShortApi.alphanumeric;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Getter @Setter @Accessors(chain = true)
 public class User {
     public static final int USERNAME_LOWER_BOUNDARY = 1;
