@@ -1,0 +1,1 @@
+docker run --rm -it -v $(pwd):/fibo_calc -w /fibo_calc maven mvn package -DskipTests && docker-compose up

@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.beans.PropertyVetoException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class PersistenceConfig {
     private final ApplicationContext appContext;
 
     @Bean
-    LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    LocalContainerEntityManagerFactoryBean entityManagerFactory() throws PropertyVetoException{
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(false);
         vendorAdapter.setDatabase(Database.H2);
@@ -55,9 +56,10 @@ public class PersistenceConfig {
     }
 
     @Bean
-    DataSource dataSource() {
+    DataSource dataSource() throws PropertyVetoException {
         ComboPooledDataSource actualDataSource = new com.mchange.v2.c3p0.ComboPooledDataSource();
         actualDataSource.setJdbcUrl(env.getProperty("db.url"));
+        actualDataSource.setDriverClass(env.getProperty("db.driver"));
         actualDataSource.setUser(env.getProperty("db.username"));
         actualDataSource.setPassword(env.getProperty("db.password"));
         actualDataSource.setMinPoolSize(env.getProperty("db.pool.min_size", int.class));

@@ -1,0 +1,9 @@
+version: '3'
+services:
+  web:
+    image: tomcat
+    ports:
+      - "8099:8080"
+    volumes:
+      - ./target/fibo_calc-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/ROOT.war
+      - ./target/fibo_calc-1.0-SNAPSHOT:/usr/local/tomcat/webapps/ROOT
