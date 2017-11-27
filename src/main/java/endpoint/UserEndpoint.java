@@ -1,46 +1,33 @@
 package endpoint;
 
-import dao.UserRepository;
+import dto.UserDto;
 import model.User;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import service.UserServiceInterface;
 
 import javax.validation.Valid;
 
 @RestController
 public class UserEndpoint {
-    private UserRepository userRepository;
-
-    public UserEndpoint(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, path = "/users")
-    public ResponseEntity getAllUsers() {
-        return ResponseEntity.ok(userRepository.findAll());
-    }
-
-    @RequestMapping(method = RequestMethod.GET, path = "/user/{id}")
-    public ResponseEntity getUser(@PathVariable Long id) {
-        return ResponseEntity.ok(userRepository.findById(id));
-    }
-
+    @Autowired
+    private UserServiceInterface userService;
 
     @RequestMapping(value="/registration", method = RequestMethod.GET)
     public ModelAndView registration(){
         ModelAndView modelAndView = new ModelAndView();
-        User user = new User();
+        UserDto user = new UserDto();
         modelAndView.addObject("userForm", user);
         modelAndView.setViewName("registration");
         return modelAndView;
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ModelAndView createNewUser(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult) {
+    public ModelAndView createNewUser(@ModelAttribute("userForm") @Valid UserDto userForm, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
-        User user = userRepository.findByUsername(userForm.getUsername());
+        User user = userService.findUser(userForm.getUsername());
         if (user != null) {
             String errorMsg = String.format("User with username [%s] has already been registered", userForm.getUsername());
             bindingResult.rejectValue("username", "error.user", errorMsg);
@@ -48,7 +35,7 @@ public class UserEndpoint {
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("registration");
         } else {
-            userRepository.save(userForm);
+            userService.save(new User(userForm));
             modelAndView.addObject("index",0);
             modelAndView.setViewName("login");
         }
