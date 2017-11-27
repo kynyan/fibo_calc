@@ -30,7 +30,7 @@
 
     <form method="POST" modelAttribute="index" class="form-signin">
         <h2 class="form-heading">Fibonacci calculator</h2>
-
+        <p>Please enter a number not greater than 1 000 000</p>
         <spring:bind path="index">
             <div class="form-group ${status.error ? 'has-error' : ''}">
                 <form:input name = "index" type="number" path="index" class="form-calculator" placeholder="Index"
