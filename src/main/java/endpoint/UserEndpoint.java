@@ -50,7 +50,6 @@ public class UserEndpoint {
 
         ModelAndView model = new ModelAndView();
         if (error != null) {
-            System.out.println("Error: "+ error);
             model.addObject("error", "Invalid username and password!");
         }
 

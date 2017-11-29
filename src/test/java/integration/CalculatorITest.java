@@ -1,6 +1,6 @@
 package integration;
 
-import config.DispatcherConfig;
+import config.MvcConfig;
 import config.PersistenceConfig;
 import model.Calculator;
 import org.junit.Ignore;
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 @Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes={DispatcherConfig.class, PersistenceConfig.class})
+@ContextConfiguration(classes={MvcConfig.class, PersistenceConfig.class})
 public class CalculatorITest {
     @Test public void returnsFiboNumber() {
         int index = integer(0, Calculator.FIBO_INDEX_UPPER_BOUNDARY);
